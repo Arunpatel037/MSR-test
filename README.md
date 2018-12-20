@@ -15,3 +15,6 @@ This Command creates mentioned resources in terraform file.
 To remove the resources created by the terraform file use this command.
 
 $ terraform destroy
+
+#Ansible
+Ansible Command to run Playboks
