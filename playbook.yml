@@ -5,13 +5,15 @@
    user: ec2-user
    #Docker Sections
    tasks:
-    - name: install docker
-      command: sudo curl -fsSL "https://download.docker.com/linux/ubuntu/gpg" | apt-key add -qq -
-      command: sudo echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial edge" > /etc/apt/sources.list.d/docker.list
-    - name: Docker installation
-      command: sudo apt-get update -qq
-      command: apt-get install -y -qq --no-install-recommends docker-ce
+    - name:    Add Docker GPG key
+      apt_key: url=https://download.docker.com/linux/ubuntu/gpg
+    - name:    Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial edge
+    - name:    Install Docker
+      apt:     name=docker-ce
       #Docker Compose section
+    
     - name: Downloading docker-compose binaries
       command: sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - name: Apply executable permissions to the binary
@@ -33,7 +35,7 @@
       with_items:
       - git 
       - openssl
-      #nvm section Downloading NVM binary package
+      #nvm section
     - name: NVM installer
       get_url: url=https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh dest=/tmp/installer.sh
     - name: Execute install.sh
