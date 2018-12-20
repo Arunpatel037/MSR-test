@@ -17,4 +17,7 @@ To remove the resources created by the terraform file use this command.
 $ terraform destroy
 
 #Ansible
+
 Ansible Command to run Playboks
+
+$ ansible-playbook playbook.yml
