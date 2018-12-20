@@ -2,7 +2,8 @@
 Provide the AWS access Key and seceret key in the provider section.
 This user must be have EC2 Full access.
 
-Commands To Excute terraform file.
+Commands To Excute terraform file.\n
+
 $ terraform init
 This command intialises the terraform. It downloades the required packeges to the local.
 $ terraform apply
