@@ -3,10 +3,15 @@ provider "aws" {
     secret_key = "XXXXXXXXXXXXXX"
     region = "ap-southeast-1"
 }
+resource "aws_default_vpc" "default" {
+  tags = {
+    Name = "Default VPC"
+  }
+}
 resource "aws_security_group" "My_SG" {
     name = "allow_SSH"
     description = "Allow inbound SSH traffic"
-    vpc_id = "vpc-5f87db38"
+    vpc_id = "${aws_default_vpc.default.id}"
 
     ingress {
         from_port = 22
@@ -37,6 +42,12 @@ resource "aws_instance" "MSR_test_Instance" {
     user_data       = "${template_file.userdata.rendered}"
     key_name         = "myKey"
     count            = "2"
+
+   tags {
+         Name = "MSR-test-Instance-${count.index+1}"
+     }
+}
+
 
    tags {
          Name = "MSR-test-Instance-${count.index+1}"
