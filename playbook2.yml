@@ -1,0 +1,42 @@
+---
+#host actions to be done
+ - hosts: all
+   become: yes
+   user: ec2-user
+   #Docker Sections
+   tasks:
+    - name: install docker
+      command: sudo curl -fsSL "https://download.docker.com/linux/ubuntu/gpg" | apt-key add -qq -
+      command: sudo echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial edge" > /etc/apt/sources.list.d/docker.list
+    - name: Docker installation
+      command: sudo apt-get update -qq
+      command: apt-get install -y -qq --no-install-recommends docker-ce
+      #Docker Compose section
+    - name: Downloading docker-compose binaries
+      command: sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - name: Apply executable permissions to the binary
+      command: sudo chmod +x /usr/local/bin/docker-compose
+        #node js Section
+    - name: add apt key for nodesource
+      apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+    - name: add repo for nodesource
+      apt_repository:
+            repo: 'deb https://deb.nodesource.com/node_0.10 {{ ansible_distribution_release }} main' 
+            update_cache: yes
+
+    - name: install nodejs
+      apt: name=nodejs
+      #git and openssl section
+    - name: instaiing GIT and OpenSSL
+      apt: name={{ item }} state=installed
+      with_items:
+      - git 
+      - openssl
+      #nvm section
+    - name: NVM installer
+      get_url: url=https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh dest=/tmp/installer.sh
+    - name: Execute install.sh
+      command: sudo sh /tmp/installer.sh
+    - name: removing installer.sh
+      file: path=/tmp/installer.sh state=absent
